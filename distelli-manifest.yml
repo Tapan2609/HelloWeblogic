@@ -1,0 +1,47 @@
+tapan/tomcatApp:
+
+    Env:
+        - CLASSPATH = "/home/tapankumar/Oracle/Middleware/wlserver_10.3/weblogic.jar"
+        #
+        # Set the JAVA_HOME below for the destination
+        # deployment server JRE directory.
+        #
+        - CATALINA_HOME: "/home/tapankumar/Oracle/Middleware/wlserver_10.3"
+        - JAVA_HOME: "/usr/lib/jvm/java-1.8.0-openjdk-amd64"
+        #
+        # JVM_ARGS: '"-Duser.timezone=UTC -Xmx128M -Xms128M"'
+        - PORT: "7001"
+        # ARGS: "$PORT"
+
+    
+    PreBuild:
+        # sudo add-apt-repository ppa:webupd8team/java
+        # sudo apt-get -y update
+        # echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+        # echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections
+        # sudo apt-get -y install oracle-java7-installer
+        # sudo apt-get -y install oracle-java7-set-default
+        # sudo apt-get -y install ant
+        # sudo apt-get -y install maven
+        # sudo apt-get install gradle
+
+    Build:
+        - mvn package
+
+    PkgInclude:
+        - target/*.war
+        - lib/*.war
+
+
+    PostInstall:
+        - echo "PostStart"
+        # publicip=$(curl -s ident.me)
+        # echo "Public IP $publicip"
+        - 'sudo cp -f ./target/*.war $CATALINA_HOME/webapps/'
+        # By default tomcat detects if the war file has changed and
+        # automatically extracts it. If restart is required you can
+        # restart tomcat with the command below.
+        # Restart Tomcat - You might have to use a different command
+        # depending on how tomcat is installed
+        # sudo service tomcat8 restart
+        - 'echo "You can validate the install by pointing your browser at http://$publicip:$PORT/HelloWorldDistelli"'
