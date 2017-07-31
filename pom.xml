@@ -1,45 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.example.app</groupId>
-  <artifactId>HelloWeblogic</artifactId>
-  <packaging>war</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <name>HelloWeblogic Maven Webapp</name>
-  <url>http://maven.apache.org</url>
-  <dependencies>
-    <dependency>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.example.app</groupId>
+    <artifactId>weblogicwithmaven</artifactId>
+    <packaging>war</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <name>HelloWeblogic Maven Webapp</name>
+    <dependencies>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+         <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
-  </dependencies>
-  <plugin> 
-    <groupId>com.oracle.weblogic</groupId> 
-        <artifactId>weblogic-maven-plugin</artifactId> 
-        <version>10.3.6</version> 
-        <configuration> 
-            <adminurl>t3://localhost:7001</adminurl>
-            <user>weblogic</user> 
-            <password>weblogic123</password> 
-            <upload>true</upload> 
-            <action>deploy</action> 
-            <remote>false</remote> 
-            <verbose>true</verbose> 
-            <source>/home/tapankumar/Oracle/Middleware/user_projects/domains/hw_domain/servers/AdminServer/deployments/HelloWeblogic.war</source> 
-            <name>${project.build.finalName}</name> 
-        </configuration> 
-        <executions> 
-            <execution> 
-                <phase>install</phase> 
-                <goals> 
-                    <goal>deploy</goal> 
-                </goals> 
-            </execution> 
-        </executions> 
-    </plugin> 
-  <build>
-    <finalName>HelloWeblogic</finalName>
-  </build>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.4.1</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>src/main/webapp/VAADIN/widgetsets</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.oracle.weblogic</groupId>
+                <artifactId>weblogic-maven-plugin</artifactId>
+                <version>10.3.6</version>
+                <configuration>
+                    <middlewareHome>/opt/Oracle/Middleware</middlewareHome>
+                    <domainHome>/opt/Oracle/Middleware/user_projects/domains/hw_domain</domainHome>
+                    <adminurl>t3://localhost:7001</adminurl>
+                    <user>weblogic</user>
+                    <password>weblogic123</password>
+                    <source>
+                        ${project.build.directory}/${project.build.finalName}.${project.packaging}
+                    </source>
+                    <targets>AdminServer</targets>
+                    <verbose>true</verbose>
+                    <name>${project.build.finalName}</name>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
